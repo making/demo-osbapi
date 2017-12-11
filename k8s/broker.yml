@@ -1,0 +1,11 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ClusterServiceBroker
+metadata:
+  name: demo
+spec:
+  url: https://demo-osbapi.cfapps.io
+  authInfo:
+    basic:
+      secretRef:
+        namespace: default
+        name: demo-broker-secret

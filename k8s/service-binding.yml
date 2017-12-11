@@ -1,0 +1,9 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: hello-key
+  namespace: default
+spec:
+  instanceRef:
+    name: hello
+  secretName: hello-key-secret
