@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,8 +109,8 @@ public class ServiceBrokerHandler {
 				.flatMap(r -> {
 					ObjectNode res = this.objectMapper.createObjectNode();
 					res.putObject("credentials") //
-							.put("username", "foo") //
-							.put("password", "bar");
+							.put("username", UUID.randomUUID().toString()) //
+							.put("password", UUID.randomUUID().toString());
 					return status(HttpStatus.CREATED).syncBody(res);
 				}) //
 				.switchIfEmpty(this.badRequest);
