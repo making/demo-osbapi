@@ -49,6 +49,17 @@ demo        demo      Demo
 cf create-service demo demo hello
 ```
 
+Check the service instance
+
+```
+$ cf services
+Getting services in org ikam / space home as admin...
+OK
+
+name       service        plan     bound apps    last operation
+hello      demo           demo                   create succeeded
+```
+
 #### Create a service binding (service key)
 
 ```
@@ -124,6 +135,7 @@ svc/catalog-catalog-apiserver   NodePort   10.109.180.16   <none>        443:304
 
 ```
 kubectl apply -f k8s/secret.yml
+kubectl apply -f k8s/service-broker.yml
 ```
 
 Check the service broker
