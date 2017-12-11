@@ -1,31 +1,29 @@
 ---
 services:
-- id: 64e7efd1-ad59-49d7-b169-f26f4a6abefd
-  name: cloudamqp
-  description: Cloud AMQP
+- id: b98aea8a-9961-44bc-b68e-627b5d495a94
+  name: demo
+  description: Demo
   bindable: true
   planUpdateable: false
   requires: []
   tags:
-  - rabbitmq
+  - demo
   metadata:
-    displayName: Cloud AMQP
+    displayName: Demo
     documentationUrl: https://twitter.com/making
-    imageUrl: https://api.cloudamqp.com/img/service-logo.png
-    longDescription: Cloud AMQP
+    imageUrl: https://avatars2.githubusercontent.com/u/19211531
+    longDescription: Demo
     providerDisplayName: "@making"
     supportUrl: https://twitter.com/making
   plans:
-  - id: 7cf15355-0a87-43b2-b14a-9a7934236ee5
-    name: lemur
-    description: Little Lemur - For Development
+  - id: dcb86c66-274e-44c0-941d-d78cacd12ccc
+    name: demo
+    description: Demo
     free: true
     metadata:
-      displayName: Lemur
+      displayName: Demo
       bullets:
-      - Max 100 queues
-      - Max 10 000 queued messages
-      - Max idle queue time 28 days
+      - Demo
       costs:
       - amount:
           usd: 0
