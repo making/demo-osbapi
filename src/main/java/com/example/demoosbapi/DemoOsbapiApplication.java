@@ -1,7 +1,5 @@
 package com.example.demoosbapi;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,37 +14,39 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import java.io.IOException;
+
 @SpringBootApplication
 public class DemoOsbapiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoOsbapiApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoOsbapiApplication.class, args);
+    }
 
-	@Bean
-	public RouterFunction<ServerResponse> route(
-			@Value("${osb.catalog:classpath:catalog.yml}") Resource catalog)
-			throws IOException {
-		return new ServiceBrokerHandler(catalog).routes();
-	}
+    @Bean
+    public RouterFunction<ServerResponse> route(
+            @Value("${osb.catalog:classpath:catalog.yml}") Resource catalog)
+            throws IOException {
+        return new ServiceBrokerHandler(catalog).routes();
+    }
 
-	@Bean
-	public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) {
-		return http.authorizeExchange() //
-				.pathMatchers("/v2/**").authenticated() //
-				.pathMatchers("/application/**").authenticated() //
-				.and() //
-				.httpBasic() //
-				.and() //
-				.csrf().disable() //
-				.build();
-	}
+    @Bean
+    public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) {
+        return http.authorizeExchange() //
+                .pathMatchers("/v2/**").authenticated() //
+                .pathMatchers("/application/**").authenticated() //
+                .and() //
+                .httpBasic() //
+                .and() //
+                .csrf().disable() //
+                .build();
+    }
 
-	@Bean
-	public ReactiveUserDetailsService userDetailsService() {
-		UserDetails user = User.withDefaultPasswordEncoder().username("username")
-				.password("password").roles("USER").build();
-		return new MapReactiveUserDetailsService(user);
-	}
+    @Bean
+    public ReactiveUserDetailsService userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder().username("username")
+                .password("password").roles("USER").build();
+        return new MapReactiveUserDetailsService(user);
+    }
 
 }
