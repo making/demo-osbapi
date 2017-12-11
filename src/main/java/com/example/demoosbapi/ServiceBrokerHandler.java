@@ -62,9 +62,8 @@ public class ServiceBrokerHandler {
         String instanceId = request.pathVariable("instanceId");
         log.info("Provisioning instanceId={}", instanceId);
         return request.bodyToMono(JsonNode.class) //
-                .filter(this::validateServiceIdInBody) //
-                .filter(this::validatePlanIdInBody) //
-                .filter(this::validateGuidIdInBody) //
+                .filter(this::validateMandatoryInBody) //
+                .filter(this::validateGuidInBody) //
                 .flatMap(r -> {
                     ObjectNode res = this.objectMapper.createObjectNode() //
                             .put("dashboard_url", "http://example.com");
@@ -77,8 +76,7 @@ public class ServiceBrokerHandler {
         String instanceId = request.pathVariable("instanceId");
         log.info("Updating instanceId={}", instanceId);
         return request.bodyToMono(JsonNode.class) //
-                .filter(this::validateServiceIdInBody) //
-                .filter(this::validatePlanIdInBody) //
+                .filter(this::validateMandatoryInBody) //
                 .flatMap(r -> ok().syncBody(Collections.emptyMap())) //
                 .switchIfEmpty(this.badRequest);
     }
@@ -102,8 +100,7 @@ public class ServiceBrokerHandler {
         String bindingId = request.pathVariable("bindingId");
         log.info("bind instanceId={}, bindingId={}", instanceId, bindingId);
         return request.bodyToMono(JsonNode.class) //
-                .filter(this::validateServiceIdInBody) //
-                .filter(this::validatePlanIdInBody) //
+                .filter(this::validateMandatoryInBody) //
                 .flatMap(r -> {
                     ObjectNode res = this.objectMapper.createObjectNode();
                     res.putObject("credentials") //
@@ -129,15 +126,12 @@ public class ServiceBrokerHandler {
                 && request.queryParam("service_id").isPresent();
     }
 
-    private boolean validatePlanIdInBody(JsonNode node) {
-        return node.has("plan_id") && node.get("plan_id").asText().length() == 36;
+    private boolean validateMandatoryInBody(JsonNode node) {
+        return node.has("plan_id") && node.get("plan_id").asText().length() == 36 //
+                && node.has("service_id") && node.get("service_id").asText().length() == 36;
     }
 
-    private boolean validateServiceIdInBody(JsonNode node) {
-        return node.has("service_id") && node.get("service_id").asText().length() == 36;
-    }
-
-    private boolean validateGuidIdInBody(JsonNode node) {
+    private boolean validateGuidInBody(JsonNode node) {
         return node.has("organization_guid") && node.has("space_guid");
     }
 
