@@ -66,7 +66,17 @@ hello      demo           demo                   create succeeded
 cf create-service-key hello hello-key
 ```
 
-Show the service key
+Check the service bindings
+
+```
+$ cf service-keys hello
+Getting keys for service instance hello as admin...
+
+name
+hello-key
+```
+
+Let's see the detail,
 
 ```
 $ cf service-key hello hello-key
@@ -225,6 +235,8 @@ metadata:
 ```
 kubectl apply -f k8s/service-binding.yml 
 ```
+
+Check the service binding
 
 ```
 $ kubectl get servicebindings
