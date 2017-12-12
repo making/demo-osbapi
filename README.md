@@ -119,6 +119,8 @@ helm install svc-cat/catalog --name catalog --namespace catalog --set insecure=t
 Check if Service Catalog is working
 
 ```
+$ kubectl get all --namespace catalog
+
 NAME                                        DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 deploy/catalog-catalog-apiserver            1         1         1            1           3m
 deploy/catalog-catalog-controller-manager   1         1         1            1           3m
