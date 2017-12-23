@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonMap;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -131,8 +130,8 @@ public class ServiceBrokerHandler {
     }
 
     private boolean validateMandatoryInBody(JsonNode node) {
-        return node.has("plan_id") && node.get("plan_id").asText().length() == 36 //
-                && node.has("service_id") && node.get("service_id").asText().length() == 36;
+        return node.has("plan_id") && node.get("plan_id").asText().length() == 36 // TODO
+                && node.has("service_id") && node.get("service_id").asText().length() == 36; // TODO
     }
 
     private boolean validateGuidInBody(JsonNode node) {
@@ -148,7 +147,8 @@ public class ServiceBrokerHandler {
                     || authorizations.get(0).length() <= "Basic ".length()
                     || !authorizations.get(0).substring("Basic ".length()).equals(basic)) {
                 return status(HttpStatus.UNAUTHORIZED)
-                        .syncBody(singletonMap("message", "Unauthorized."));
+                        .syncBody(this.objectMapper.createObjectNode() //
+                                .put("message", "Unauthorized."));
             }
         }
         return function.handle(request);
@@ -159,7 +159,8 @@ public class ServiceBrokerHandler {
         List<String> apiVersion = request.headers().header("X-Broker-API-Version");
         if (CollectionUtils.isEmpty(apiVersion)) {
             return status(HttpStatus.PRECONDITION_FAILED)
-                    .syncBody(singletonMap("message", "X-Broker-API-Version header is missing."));
+                    .syncBody(this.objectMapper.createObjectNode() //
+                            .put("message", "X-Broker-API-Version header is missing."));
         }
         return function.handle(request);
     }
