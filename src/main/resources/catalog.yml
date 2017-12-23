@@ -1,7 +1,7 @@
 ---
 services:
 - id: b98aea8a-9961-44bc-b68e-627b5d495a94 # must be unique
-  name: demo
+  name: demo #must be unique
   description: Demo
   bindable: true
   planUpdateable: false
