@@ -20,10 +20,10 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -81,7 +81,7 @@ public class ServiceBrokerHandler {
         log.info("Updating instanceId={}", instanceId);
         return request.bodyToMono(JsonNode.class) //
                 .filter(this::validateMandatoryInBody) //
-                .flatMap(r -> ok().syncBody(Collections.emptyMap())) //
+                .flatMap(r -> ok().syncBody(emptyMap())) //
                 .switchIfEmpty(this.badRequest);
     }
 
@@ -91,7 +91,7 @@ public class ServiceBrokerHandler {
         if (!this.validateParameters(request)) {
             return this.badRequest;
         }
-        return ok().syncBody(Collections.emptyMap());
+        return ok().syncBody(emptyMap());
     }
 
     Mono<ServerResponse> lastOperation(ServerRequest request) {
@@ -122,7 +122,7 @@ public class ServiceBrokerHandler {
         if (!this.validateParameters(request)) {
             return this.badRequest;
         }
-        return ok().syncBody(Collections.emptyMap());
+        return ok().syncBody(emptyMap());
     }
 
     private boolean validateParameters(ServerRequest request) {
