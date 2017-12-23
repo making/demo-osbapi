@@ -148,7 +148,7 @@ public class ServiceBrokerHandler {
                     || !authorizations.get(0).substring("Basic ".length()).equals(basic)) {
                 return status(HttpStatus.UNAUTHORIZED)
                         .syncBody(this.objectMapper.createObjectNode() //
-                                .put("message", "Unauthorized."));
+                                .put("description", "Unauthorized."));
             }
         }
         return function.handle(request);
@@ -160,7 +160,7 @@ public class ServiceBrokerHandler {
         if (CollectionUtils.isEmpty(apiVersion)) {
             return status(HttpStatus.PRECONDITION_FAILED)
                     .syncBody(this.objectMapper.createObjectNode() //
-                            .put("message", "X-Broker-API-Version header is missing."));
+                            .put("description", "X-Broker-API-Version header is missing."));
         }
         return function.handle(request);
     }
