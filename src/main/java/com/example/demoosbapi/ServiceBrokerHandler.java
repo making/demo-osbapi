@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.server.HandlerFunction;
@@ -18,10 +19,12 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Collections.singletonMap;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -51,7 +54,8 @@ public class ServiceBrokerHandler {
                 .andRoute(DELETE(serviceInstance), this::deprovisioning)
                 .andRoute(PUT(serviceBindings), this::bind)
                 .andRoute(DELETE(serviceBindings), this::unbind)
-                .filter(this::versionCheck);
+                .filter(this::versionCheck)
+                .filter(this::basicAuthentication);
     }
 
     Mono<ServerResponse> catalog(ServerRequest request) {
@@ -135,11 +139,27 @@ public class ServiceBrokerHandler {
         return node.has("organization_guid") && node.has("space_guid");
     }
 
+    private Mono<ServerResponse> basicAuthentication(ServerRequest request,
+                                                     HandlerFunction<ServerResponse> function) {
+        if (request.path().startsWith("/v2/")) {
+            List<String> authorizations = request.headers().header(HttpHeaders.AUTHORIZATION);
+            String basic = Base64.getEncoder().encodeToString("username:password".getBytes());
+            if (authorizations.isEmpty()
+                    || authorizations.get(0).length() <= "Basic ".length()
+                    || !authorizations.get(0).substring("Basic ".length()).equals(basic)) {
+                return status(HttpStatus.UNAUTHORIZED)
+                        .syncBody(singletonMap("message", "Unauthorized."));
+            }
+        }
+        return function.handle(request);
+    }
+
     private Mono<ServerResponse> versionCheck(ServerRequest request,
                                               HandlerFunction<ServerResponse> function) {
         List<String> apiVersion = request.headers().header("X-Broker-API-Version");
         if (CollectionUtils.isEmpty(apiVersion)) {
-            return status(HttpStatus.PRECONDITION_FAILED).build();
+            return status(HttpStatus.PRECONDITION_FAILED)
+                    .syncBody(singletonMap("message", "X-Broker-API-Version header is missing."));
         }
         return function.handle(request);
     }
