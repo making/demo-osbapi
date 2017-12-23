@@ -1,6 +1,6 @@
 ---
 services:
-- id: b98aea8a-9961-44bc-b68e-627b5d495a94
+- id: b98aea8a-9961-44bc-b68e-627b5d495a94 # must be unique
   name: demo
   description: Demo
   bindable: true
@@ -16,7 +16,7 @@ services:
     providerDisplayName: "@making"
     supportUrl: https://twitter.com/making
   plans:
-  - id: dcb86c66-274e-44c0-941d-d78cacd12ccc
+  - id: dcb86c66-274e-44c0-941d-d78cacd12ccc # must be unique
     name: demo
     description: Demo
     free: true
